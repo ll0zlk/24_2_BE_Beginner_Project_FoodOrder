@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메뉴 및 주문 관리</title>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        .menu-container, .order-container {
+            width: 50%;
+            padding: 20px;
+        }
+        .menu-item, .order-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .order-item button {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="menu-container">
+    <h2>메뉴 리스트</h2>
+    <div class="menu-item">
+        <h3>엄마는 외계인</h3>
+        <button onclick="addOrder('엄마는 외계인')">주문하기</button>
+    </div>
+    <div class="menu-item">
+        <h3>31요거트</h3>
+        <button onclick="addOrder('31요거트')">주문하기</button>
+    </div>
+    <div class="menu-item">
+        <h3>아몬드봉봉</h3>
+        <button onclick="addOrder('아몬드봉봉')">주문하기</button>
+    </div>
+</div>
+
+<div class="order-container">
+    <h2>주문 내역</h2>
+    <div id="order-list"></div>
+</div>
+
+<script>
+    async function loadOrders() {
+        const response = await fetch('/api/orders');
+        const orders = await response.json();
+        if (Array.isArray(orders)) {
+            renderOrders(orders);
+        } else {
+            console.error("Error: Orders is not an array", orders);
+        }
+    }
+
+    async function addOrder(itemName) {
+        const orderDTO = { menuName: itemName, count: 1 };
+        const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderDTO)
+        });
+
+        if (response.ok) {
+            await loadOrders();
+        } else {
+            alert("주문 추가 실패!");
+        }
+    }
+
+    async function changeOrder(id, newCount, menuName) {
+        const orderDTO = { id: id, count: newCount, menuName: menuName };
+        const response = await fetch(`/api/orders/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderDTO)
+        });
+
+        if (response.ok) {
+            await loadOrders();
+        } else {
+            alert("주문 변경 실패!");
+        }
+    }
+
+    async function deleteOrder(id) {
+        const response = await fetch(`/api/orders/${id}`, { method: 'DELETE' });
+        if (response.ok) {
+            await loadOrders();
+        } else {
+            alert("주문 삭제 실패!");
+        }
+    }
+
+    function renderOrders(orders) {
+        const orderList = document.getElementById('order-list');
+        orderList.innerHTML = '';
+
+        orders.forEach(order => {
+            const orderItem = document.createElement('div');
+            orderItem.className = 'order-item';
+
+            orderItem.innerHTML = `
+                    <span>${order.menuName} - 수량: ${order.count}</span>
+                    <button onclick="changeOrder(${order.id}, ${order.count + 1}, '${order.menuName}')">+</button>
+                    <button onclick="changeOrder(${order.id}, ${order.count - 1}, '${order.menuName}')">-</button>
+                    <button onclick="deleteOrder(${order.id})">X</button>
+                `;
+
+            orderList.appendChild(orderItem);
+        });
+    }
+
+    loadOrders();
+</script>
+</body>
+</html>
