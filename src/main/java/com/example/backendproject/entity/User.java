@@ -3,18 +3,18 @@ package com.example.backendproject.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "customers")
-public class Customer {
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String customerName;
+    private String userName;
     private String phone;
 
-    public Customer() {}
+    public User() {}
 
-    public Customer(String customerName, String phone) {
-        this.customerName = customerName;
+    public User(String userName, String phone) {
+        this.userName = userName;
         this.phone = phone;
     }
 
@@ -22,8 +22,8 @@ public class Customer {
         return id;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getUserName() {
+        return userName;
     }
 
     public String getPhone() {
