@@ -9,30 +9,35 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String userId;
+    private String foodId;
     private int count;
 
-    // 신규 주문
-    public Order(String name, int count) {
-        this.name = name;
-        this.count = count;
-    }
-
-    // 기존 주문
-    public Order(Long id, String name, int count) {
-        this.id = id;
-        this.name = name;
-        this.count = count;
-    }
-
     protected Order() {}
+
+    public Order(Long id, String userId, String foodId, int count) {
+        this.id = id;
+        this.userId = userId;
+        this.foodId = foodId;
+        this.count = count;
+    }
+
+    public Order(String userId, String foodId, int count) {
+        this.userId = userId;
+        this.foodId = foodId;
+        this.count = count;
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getFoodId() {
+        return foodId;
     }
 
     public int getCount() {
