@@ -9,22 +9,29 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userId;
-    private String foodId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_id", nullable = false)
+    private Food food;
+
     private int count;
 
     protected Order() {}
 
-    public Order(Long id, String userId, String foodId, int count) {
-        this.id = id;
-        this.userId = userId;
-        this.foodId = foodId;
+    public Order(User user, Food food, int count) {
+        this.user = user;
+        this.food = food;
         this.count = count;
     }
 
-    public Order(String userId, String foodId, int count) {
-        this.userId = userId;
-        this.foodId = foodId;
+    public Order(Long id, User user, Food food, int count) {
+        this.id = id;
+        this.user = user;
+        this.food = food;
         this.count = count;
     }
 
@@ -32,12 +39,12 @@ public class Order {
         return id;
     }
 
-    public String getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public String getFoodId() {
-        return foodId;
+    public Food getFood() {
+        return food;
     }
 
     public int getCount() {
