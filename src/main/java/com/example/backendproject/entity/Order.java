@@ -9,9 +9,23 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private int count;
+
+    // 신규 주문
+    public Order(String name, int count) {
+        this.name = name;
+        this.count = count;
+    }
+
+    // 기존 주문
+    public Order(Long id, String name, int count) {
+        this.id = id;
+        this.name = name;
+        this.count = count;
+    }
+
+    protected Order() {}
 
     public Long getId() {
         return id;
@@ -21,15 +35,7 @@ public class Order {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getCount() {
         return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 }

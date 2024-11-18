@@ -3,6 +3,7 @@ package com.example.backendproject.service;
 import com.example.backendproject.dto.OrderDTO;
 import com.example.backendproject.entity.Order;
 import com.example.backendproject.repository.OrderRepository;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,8 +12,11 @@ import java.util.List;
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    public OrderService(OrderRepository orderRepository) {
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public OrderService(OrderRepository orderRepository, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.orderRepository = orderRepository;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     // 주문 조회
@@ -27,9 +31,7 @@ public class OrderService {
 
     // 주문 추가
     public OrderDTO addOrder(OrderDTO orderDTO) {
-        Order order = new Order();
-        order.setName(orderDTO.name());
-        order.setCount(orderDTO.count());
+        Order order = new Order(orderDTO.name(), orderDTO.count());
         Order saveOrder = orderRepository.save(order);
         return new OrderDTO(saveOrder.getId(), saveOrder.getName(), saveOrder.getCount());
     }
@@ -37,10 +39,9 @@ public class OrderService {
     // 주문 변경
     public OrderDTO changeOrder(Long id, OrderDTO orderDTO) {
         Order order = orderRepository.findById(id).orElseThrow(()->new RuntimeException("Order not found"));
-        order.setName(orderDTO.name());
-        order.setCount(orderDTO.count());
-        Order changeOrder = orderRepository.save(order);
-        return new OrderDTO(changeOrder.getId(), changeOrder.getName(), changeOrder.getCount());
+        Order changeOrder = new Order(order.getId(), orderDTO.name(), orderDTO.count());
+        Order saveOrder = orderRepository.save(changeOrder);
+        return new OrderDTO(saveOrder.getId(), saveOrder.getName(), saveOrder.getCount());
     }
 
     // 주문 취소
