@@ -24,32 +24,31 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         List<OrderDTO> orderDTOs = new ArrayList<>();
         for (Order order : orders) {
-            orderDTOs.add(new OrderDTO(order.getId(), order.getName(), order.getCount()));
+            orderDTOs.add(new OrderDTO(order.getId(), order.getUserId(), order.getFoodId(), order.getCount()));
         }
         return orderDTOs;
     }
 
     // 주문 추가
     public OrderDTO addOrder(OrderDTO orderDTO) {
-        Order order = new Order(orderDTO.name(), orderDTO.count());
+        Order order = new Order(orderDTO.userId(), orderDTO.foodId(), orderDTO.count());
         Order saveOrder = orderRepository.save(order);
-        return new OrderDTO(saveOrder.getId(), saveOrder.getName(), saveOrder.getCount());
+        return new OrderDTO(saveOrder.getId(), saveOrder.getUserId(), saveOrder.getFoodId(), saveOrder.getCount());
     }
 
     // 주문 변경
     public OrderDTO changeOrder(Long id, OrderDTO orderDTO) {
         Order order = orderRepository.findById(id).orElseThrow(()->new RuntimeException("Order not found"));
-        Order changeOrder = new Order(order.getId(), orderDTO.name(), orderDTO.count());
+        Order changeOrder = new Order(order.getId(), orderDTO.userId(), orderDTO.foodId(), orderDTO.count());
         Order saveOrder = orderRepository.save(changeOrder);
-        return new OrderDTO(saveOrder.getId(), saveOrder.getName(), saveOrder.getCount());
+        return new OrderDTO(saveOrder.getId(), saveOrder.getUserId(), saveOrder.getFoodId(), saveOrder.getCount());
     }
 
     // 주문 취소
     public void deleteOrder(Long id) {
         if (!orderRepository.existsById(id)) {
             throw new RuntimeException("Order not found");
-        } else {
-            orderRepository.deleteById(id);
         }
+        orderRepository.deleteById(id);
     }
 }
