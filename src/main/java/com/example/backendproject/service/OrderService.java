@@ -1,6 +1,7 @@
 package com.example.backendproject.service;
 
-import com.example.backendproject.dto.OrderDTO;
+import com.example.backendproject.dto.OrderRequestDTO;
+import com.example.backendproject.dto.OrderResponseDTO;
 import com.example.backendproject.entity.Food;
 import com.example.backendproject.entity.Order;
 import com.example.backendproject.entity.User;
@@ -26,36 +27,36 @@ public class OrderService {
 
     // 주문 조회
     @Transactional
-    public List<OrderDTO> getOrders() {
+    public List<OrderResponseDTO> getOrders() {
         List<Order> orders = orderRepository.findAll();
-        List<OrderDTO> orderDTOs = new ArrayList<>();
+        List<OrderResponseDTO> orderDTOs = new ArrayList<>();
         for (Order order : orders) {
-            orderDTOs.add(new OrderDTO(order.getId(), order.getUser().getId(), order.getFood().getId(), order.getCount()));
+            orderDTOs.add(new OrderResponseDTO(order.getId(), order.getUser().getId(), order.getFood().getId(), order.getCount()));
         }
         return orderDTOs;
     }
 
     // 주문 추가
     @Transactional
-    public OrderDTO addOrder(OrderDTO orderDTO) {
-        User user = userRepository.findById(orderDTO.userId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Food food = foodRepository.findById(orderDTO.foodId()).orElseThrow(() -> new RuntimeException("Food not found"));
+    public OrderResponseDTO addOrder(OrderRequestDTO orderRequestDTO) {
+        User user = userRepository.findById(orderRequestDTO.userId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Food food = foodRepository.findById(orderRequestDTO.foodId()).orElseThrow(() -> new RuntimeException("Food not found"));
 
-        Order order = new Order(user, food, orderDTO.count());
+        Order order = new Order(user, food, orderRequestDTO.count());
         Order saveOrder = orderRepository.save(order);
-        return new OrderDTO(saveOrder.getId(), saveOrder.getUser().getId(), saveOrder.getFood().getId(), saveOrder.getCount());
+        return new OrderResponseDTO(saveOrder.getId(), saveOrder.getUser().getId(), saveOrder.getFood().getId(), saveOrder.getCount());
     }
 
     // 주문 변경
     @Transactional
-    public OrderDTO changeOrder(Long id, OrderDTO orderDTO) {
-        User user = userRepository.findById(orderDTO.userId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Food food = foodRepository.findById(orderDTO.foodId()).orElseThrow(() -> new RuntimeException("Food not found"));
+    public OrderResponseDTO changeOrder(Long id, OrderRequestDTO orderRequestDTO) {
+        User user = userRepository.findById(orderRequestDTO.userId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Food food = foodRepository.findById(orderRequestDTO.foodId()).orElseThrow(() -> new RuntimeException("Food not found"));
         Order order = orderRepository.findById(id).orElseThrow(()->new RuntimeException("Order not found"));
 
-        Order changeOrder = new Order(order.getId(), user, food, orderDTO.count());
+        Order changeOrder = new Order(order.getId(), user, food, orderRequestDTO.count());
         Order saveOrder = orderRepository.save(changeOrder);
-        return new OrderDTO(saveOrder.getId(), saveOrder.getUser().getId(), saveOrder.getFood().getId(), saveOrder.getCount());
+        return new OrderResponseDTO(saveOrder.getId(), saveOrder.getUser().getId(), saveOrder.getFood().getId(), saveOrder.getCount());
     }
 
     // 주문 취소
