@@ -1,4 +1,4 @@
 package com.example.backendproject.dto;
 
-public record UserDTO(String userName, String phone) {
+public record UserDTO(Long id, String userName, String phone) {
 }
