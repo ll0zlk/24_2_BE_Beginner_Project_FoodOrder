@@ -7,9 +7,11 @@ import com.example.backendproject.entity.User;
 import com.example.backendproject.repository.FoodRepository;
 import com.example.backendproject.repository.OrderRepository;
 import com.example.backendproject.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class OrderService {
     }
 
     // 주문 조회
+    @Transactional
     public List<OrderDTO> getOrders() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDTO> orderDTOs = new ArrayList<>();
@@ -36,6 +39,7 @@ public class OrderService {
     }
 
     // 주문 추가
+    @Transactional
     public OrderDTO addOrder(OrderDTO orderDTO) {
         User user = userRepository.findById(orderDTO.userId()).orElseThrow(() -> new RuntimeException("User not found"));
         Food food = foodRepository.findById(orderDTO.foodId()).orElseThrow(() -> new RuntimeException("Food not found"));
@@ -46,6 +50,7 @@ public class OrderService {
     }
 
     // 주문 변경
+    @Transactional
     public OrderDTO changeOrder(Long id, OrderDTO orderDTO) {
         User user = userRepository.findById(orderDTO.userId()).orElseThrow(() -> new RuntimeException("User not found"));
         Food food = foodRepository.findById(orderDTO.foodId()).orElseThrow(() -> new RuntimeException("Food not found"));
@@ -57,6 +62,7 @@ public class OrderService {
     }
 
     // 주문 취소
+    @Transactional
     public void deleteOrder(Long id) {
         if (!orderRepository.existsById(id)) {
             throw new RuntimeException("Order not found");
