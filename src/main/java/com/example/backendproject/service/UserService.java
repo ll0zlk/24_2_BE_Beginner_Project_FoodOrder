@@ -15,9 +15,9 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO addUser(UserDTO userDTO) {
-        User user = new User();
+    public UserDTO addUser(String userName, String phone) {
+        User user = new User(userName, phone);
         User savedUser = userRepository.save(user);
-        return new UserDTO(savedUser.getUserName(), savedUser.getPhone());
+        return new UserDTO(savedUser.getId(), savedUser.getUserName(), savedUser.getPhone());
     }
 }

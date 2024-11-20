@@ -8,10 +8,7 @@ import com.example.backendproject.repository.FoodRepository;
 import com.example.backendproject.repository.OrderRepository;
 import com.example.backendproject.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
