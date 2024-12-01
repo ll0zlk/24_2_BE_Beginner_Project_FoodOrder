@@ -15,7 +15,7 @@
     <input type="text" name="phone" placeholder="Phone" />
   </div>
   <div>
-    <input type="text" name="username" placeholder="Username" />
+    <input type="text" name="email" id="userEmail" placeholder="Email" />
     <button type="submit" onclick="checkDuplicate()">중복확인</button>
   </div>
   <div>
@@ -27,20 +27,20 @@
 
 <script>
   function checkDuplicate() {
-    const userId = document.getElementById("userId").value;
+    const userEmail = document.getElementById("userEmail").value;
 
-    if (!userId) {
+    if (!userEmail) {
       alert("아이디를 입력하세요.");
       return;
     }
 
-    fetch(`/api/users/check-duplicate?id=${userId}`)
+    fetch(`/api/users/check-duplicate?id=${userEmail}`)
             .then(response => response.json())
             .then(data => {
               if (data.exists) {
-                alert("이미 존재하는 아이디입니다.");
+                alert("이미 가입된 메일입니다.");
               } else {
-                alert("사용 가능한 아이디입니다.");
+                alert("사용 가능한 메일입니다.");
               }
             })
             .catch(error => {
@@ -52,10 +52,10 @@
   function signUpUser() {
     const name = document.querySelector('input[name="name"]').value;
     const phone = document.querySelector('input[name="phone"]').value;
-    const id = document.querySelector('input[name="username"]').value;
+    const email = document.querySelector('input[name="email"]').value;
     const password = document.querySelector('input[name="password"]').value;
 
-    if (!name || !phone || !username || !password) {
+    if (!name || !phone || !email || !password) {
       alert("모든 필드를 입력하세요.");
       return;
     }
@@ -63,7 +63,7 @@
     const userData = {
       name,
       phone,
-      id,
+      email,
       password
     };
 
