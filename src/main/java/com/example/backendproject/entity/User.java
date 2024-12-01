@@ -2,26 +2,38 @@ package com.example.backendproject.entity;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
 @Entity
-@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userName;
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column
     private String phone;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders;
+    @Column(nullable = false)
+    private String password;
 
-    public User() {}
+    protected User() {
+        this.id = null;
+        this.username = null;
+        this.email = null;
+        this.phone = null;
+        this.password = null;
+    }
 
-    public User(String userName, String phone) {
-        this.userName = userName;
+    public User(Long id, String username, String email, String phone, String password) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
         this.phone = phone;
+        this.password = password;
     }
 
     public Long getId() {
@@ -29,18 +41,19 @@ public class User {
     }
 
     public String getUserName() {
-        return userName;
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public String getPassword() {
+        return password;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
 }
