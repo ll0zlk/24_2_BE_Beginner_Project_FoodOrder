@@ -3,6 +3,8 @@ package com.example.backendproject.controller;
 import com.example.backendproject.dto.OrderRequestDTO;
 import com.example.backendproject.dto.OrderResponseDTO;
 import com.example.backendproject.service.OrderService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,12 +17,6 @@ public class OrderController {
 
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
-    }
-
-    // 주문 조회
-    @GetMapping
-    public List<OrderResponseDTO> getOrders() {
-        return orderService.getOrders();
     }
 
     // 주문 추가
@@ -39,5 +35,12 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public void deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDTO>> getOrderById(HttpSession session) {
+        String userId = (String) session.getAttribute("user");
+        List<OrderResponseDTO> orders = orderService.getOrdersByUserId(userId);
+        return ResponseEntity.ok(orders);
     }
 }

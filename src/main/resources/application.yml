@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/testdb
-    username: ${USERNAME}
-    password: ${PASSWORD}
+    username: root
+    password: pw1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   config:
     import: "optional:classpath:application-secret.yml"
