@@ -7,6 +7,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -36,5 +38,16 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
         return new UserDTO(savedUser.getId(), savedUser.getUserName(), savedUser.getEmail(), savedUser.getPhone());
+    }
+
+    public Optional<UserDTO> authenticateUser(String email, String password) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            if (passwordEncoder.matches(password, user.get().getPassword())) {
+                User foundUser = user.get();
+                return Optional.of(new UserDTO(foundUser.getId(), foundUser.getUserName(), foundUser.getEmail(), foundUser.getPhone()));
+            }
+        }
+        return Optional.empty();
     }
 }
