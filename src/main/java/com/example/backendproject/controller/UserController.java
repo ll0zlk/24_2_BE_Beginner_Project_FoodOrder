@@ -36,4 +36,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutUser(HttpSession session) {
+        session.invalidate();
+        return ResponseEntity.ok("Logout successful");
+    }
 }

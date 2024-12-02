@@ -27,8 +27,9 @@ public class OrderService {
 
     // 주문 조회
     @Transactional
-    public List<OrderResponseDTO> getOrders() {
-        List<Order> orders = orderRepository.findAll();
+    public List<OrderResponseDTO> getOrdersByUserId(String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        List<Order> orders = orderRepository.findByUserId(userIdLong);
         List<OrderResponseDTO> orderDTOs = new ArrayList<>();
         for (Order order : orders) {
             orderDTOs.add(new OrderResponseDTO(order.getId(), order.getUser().getId(), order.getFood().getId(), order.getCount()));
